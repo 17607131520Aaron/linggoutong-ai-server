@@ -11,6 +11,7 @@ import com.linggoutong.server.module.service.AuthService;
 import com.linggoutong.server.common.exception.BusinessException;
 import com.linggoutong.server.common.result.ResultCode;
 import com.linggoutong.server.common.security.JwtTokenProvider;
+import com.linggoutong.server.common.util.SnowflakeIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final StringRedisTemplate redisTemplate;
+    private final SnowflakeIdGenerator snowflakeIdGenerator;
 
     @Override
     public void sendSmsCode(String phone) {
@@ -100,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = new User();
+        user.setId(snowflakeIdGenerator.nextId());
         user.setUsername(request.getPhone());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));

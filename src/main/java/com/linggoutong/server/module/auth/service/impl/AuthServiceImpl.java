@@ -9,25 +9,32 @@ import com.linggoutong.server.module.auth.dto.LoginRequest;
 import com.linggoutong.server.module.auth.dto.LoginResponse;
 import com.linggoutong.server.module.auth.dto.RegisterRequest;
 import com.linggoutong.server.module.auth.service.AuthService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final RedisUtil redisUtil;
+
+    public AuthServiceImpl(AuthenticationManager authenticationManager,
+                           JwtTokenProvider jwtTokenProvider,
+                           PasswordEncoder passwordEncoder,
+                           @Autowired(required = false) RedisUtil redisUtil) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.redisUtil = redisUtil;
+    }
 
     @Override
     public LoginResponse login(LoginRequest request) {

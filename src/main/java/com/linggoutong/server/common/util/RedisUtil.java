@@ -1,6 +1,7 @@
 package com.linggoutong.server.common.util;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@ConditionalOnBean(RedisTemplate.class)
 @RequiredArgsConstructor
 public class RedisUtil {
 

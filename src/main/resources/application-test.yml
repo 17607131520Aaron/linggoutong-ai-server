@@ -1,0 +1,45 @@
+# ==================== 测试环境配置 ====================
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  # 禁用数据源自动配置
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # 禁用MongoDB
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test
+    redis:
+      host: localhost
+      port: 6379
+
+  # 禁用RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+  # 禁用Flyway
+  flyway:
+    enabled: false
+
+  # 禁用Security
+  security:
+    enabled: false
+
+# 禁用RabbitMQ配置
+rabbitmq:
+  exchange:
+    name: test.exchange
+    delay: test.delay.exchange
+  queue:
+    push: test.push.queue
+    log: test.log.queue
+  routing:
+    push: test.push.routing
+    log: test.log.routing

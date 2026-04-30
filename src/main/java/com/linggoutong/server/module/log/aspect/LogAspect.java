@@ -6,13 +6,13 @@ import com.linggoutong.server.common.security.LoginUser;
 import com.linggoutong.server.common.security.SecurityUtils;
 import com.linggoutong.server.module.log.entity.OperationLog;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -23,11 +23,16 @@ import java.time.LocalDateTime;
 @Slf4j
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class LogAspect {
 
     private final MongoTemplate mongoTemplate;
     private final ObjectMapper objectMapper;
+
+    public LogAspect(@Autowired(required = false) MongoTemplate mongoTemplate,
+                     ObjectMapper objectMapper) {
+        this.mongoTemplate = mongoTemplate;
+        this.objectMapper = objectMapper;
+    }
 
     @Pointcut("@annotation(com.linggoutong.server.common.annotation.LogOperation)")
     public void logPointcut() {
@@ -90,10 +95,12 @@ public class LogAspect {
             operationLog.setCreateTime(LocalDateTime.now());
 
             // 异步保存日志到MongoDB
-            try {
-                mongoTemplate.save(operationLog);
-            } catch (Exception e) {
-                log.error("保存操作日志失败: {}", e.getMessage());
+            if (mongoTemplate != null) {
+                try {
+                    mongoTemplate.save(operationLog);
+                } catch (Exception e) {
+                    log.error("保存操作日志失败: {}", e.getMessage());
+                }
             }
         }
 

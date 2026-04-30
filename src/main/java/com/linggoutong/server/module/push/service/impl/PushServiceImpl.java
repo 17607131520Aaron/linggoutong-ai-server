@@ -4,6 +4,7 @@ import com.linggoutong.server.module.push.dto.PushRequest;
 import com.linggoutong.server.module.push.entity.PushMessage;
 import com.linggoutong.server.module.push.service.PushService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class PushServiceImpl implements PushService {
 
     private final MongoTemplate mongoTemplate;
 
-    public PushServiceImpl(MongoTemplate mongoTemplate) {
+    public PushServiceImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -36,10 +37,14 @@ public class PushServiceImpl implements PushService {
         message.setSentAt(LocalDateTime.now());
         message.setCreatedAt(LocalDateTime.now());
 
-        mongoTemplate.save(message);
+        if (mongoTemplate != null) {
+            mongoTemplate.save(message);
+            log.info("推送已保存到MongoDB");
+        } else {
+            log.warn("MongoDB未配置，跳过保存推送记录");
+        }
 
         // TODO: 集成极光推送SDK实现实际推送
-        log.info("推送已保存到MongoDB");
     }
 
     @Override
@@ -58,9 +63,13 @@ public class PushServiceImpl implements PushService {
         message.setSentAt(LocalDateTime.now());
         message.setCreatedAt(LocalDateTime.now());
 
-        mongoTemplate.save(message);
+        if (mongoTemplate != null) {
+            mongoTemplate.save(message);
+            log.info("广播推送已保存到MongoDB");
+        } else {
+            log.warn("MongoDB未配置，跳过保存推送记录");
+        }
 
         // TODO: 集成极光推送SDK实现广播推送
-        log.info("广播推送已保存到MongoDB");
     }
 }

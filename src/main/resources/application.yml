@@ -102,7 +102,7 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
-  type-aliases-package: com.linggoutong.server.module.*.entity
+  type-aliases-package: com.linggoutong.server.module.entity
 
 # ==================== 日志 ====================
 logging:

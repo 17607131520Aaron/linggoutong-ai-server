@@ -1,0 +1,130 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: linggoutong-ai-server
+  profiles:
+    active: dev
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
+# ==================== JWT配置 ====================
+jwt:
+  secret: ${JWT_SECRET:your-256-bit-secret-key-must-be-at-least-32-chars-long}
+  access-token-expiration: 7200000
+  refresh-token-expiration: 604800000
+  header: Authorization
+  prefix: "Bearer "
+  whitelist:
+    - /api/app/auth/login
+    - /api/app/auth/register
+    - /api/app/auth/refresh
+    - /api/pc/auth/login
+    - /api/pc/auth/register
+    - /api/pc/auth/refresh
+    - /api/common/**
+    - /swagger-ui/**
+    - /v3/api-docs/**
+    - /actuator/**
+
+# ==================== 文件上传配置 ====================
+file:
+  storage-type: local
+  local:
+    base-path: /data/linggoutong/upload
+    url-prefix: /files
+    allowed-types:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+      - application/pdf
+    max-size: 10MB
+  minio:
+    endpoint: http://localhost:9001
+    access-key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${MINIO_SECRET_KEY:minioadmin}
+    bucket-name: linggoutong
+
+# ==================== 消息推送配置 ====================
+push:
+  jpush:
+    app-key: ${JPUSH_APP_KEY:your_app_key}
+    master-secret: ${JPUSH_MASTER_SECRET:your_master_secret}
+    apns-production: false
+
+# ==================== RabbitMQ配置 ====================
+rabbitmq:
+  exchange:
+    name: linggoutong.exchange
+    delay: linggoutong.delay.exchange
+  queue:
+    push: linggoutong.push.queue
+    log: linggoutong.log.queue
+  routing:
+    push: linggoutong.push.routing
+    log: linggoutong.log.routing
+
+# ==================== OpenAPI / Swagger ====================
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  group-configs:
+    - group: app-auth
+      paths-to-match: /api/app/auth/**
+      packages-to-scan: com.linggoutong.server.module.auth.controller.app
+    - group: app-user
+      paths-to-match: /api/app/user/**
+      packages-to-scan: com.linggoutong.server.module.user.controller.app
+    - group: app-file
+      paths-to-match: /api/app/file/**
+      packages-to-scan: com.linggoutong.server.module.file.controller.app
+    - group: app-push
+      paths-to-match: /api/app/push/**
+      packages-to-scan: com.linggoutong.server.module.push.controller.app
+    - group: pc-auth
+      paths-to-match: /api/pc/auth/**
+      packages-to-scan: com.linggoutong.server.module.auth.controller.pc
+    - group: pc-user
+      paths-to-match: /api/pc/user/**
+      packages-to-scan: com.linggoutong.server.module.user.controller.pc
+    - group: pc-file
+      paths-to-match: /api/pc/file/**
+      packages-to-scan: com.linggoutong.server.module.file.controller.pc
+    - group: pc-push
+      paths-to-match: /api/pc/push/**
+      packages-to-scan: com.linggoutong.server.module.push.controller.pc
+
+# ==================== MyBatis-Plus ====================
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  type-aliases-package: com.linggoutong.server.module.*.entity
+
+# ==================== 日志 ====================
+logging:
+  level:
+    root: INFO
+    com.linggoutong.server: DEBUG
+    org.springframework.security: DEBUG

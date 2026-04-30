@@ -23,13 +23,13 @@ jwt:
   header: Authorization
   prefix: "Bearer "
   whitelist:
-    - /api/app/auth/login
-    - /api/app/auth/register
-    - /api/app/auth/refresh
-    - /api/web/auth/login
-    - /api/web/auth/register
-    - /api/web/auth/refresh
-    - /api/common/**
+    - /app/auth/login
+    - /app/auth/register
+    - /app/auth/refresh
+    - /web/auth/login
+    - /web/auth/register
+    - /web/auth/refresh
+    - /common/**
     - /swagger-ui/**
     - /v3/api-docs/**
     - /actuator/**
@@ -52,6 +52,14 @@ file:
     access-key: ${MINIO_ACCESS_KEY:minioadmin}
     secret-key: ${MINIO_SECRET_KEY:minioadmin}
     bucket-name: linggoutong
+
+# ==================== 阿里云短信配置 ====================
+aliyun:
+  sms:
+    access-key-id: ${ALIYUN_SMS_ACCESS_KEY_ID:}
+    access-key-secret: ${ALIYUN_SMS_ACCESS_KEY_SECRET:}
+    sign-name: ${ALIYUN_SMS_SIGN_NAME:领购通}
+    template-code: ${ALIYUN_SMS_TEMPLATE_CODE:SMS_000000000}
 
 # ==================== 消息推送配置 ====================
 push:
@@ -110,3 +118,29 @@ logging:
     root: INFO
     com.linggoutong.server: DEBUG
     org.springframework.security: DEBUG
+
+# ==================== OpenAI配置 ====================
+openai:
+  api-key: ${OPENAI_API_KEY:tp-c33o4tn7e5a7zneirv9w11vjcprojsnrfknpwcj9xtf55zhd}
+  model: ${OPENAI_MODEL:mimo-v2-pro}
+  base-url: ${OPENAI_BASE_URL:https://token-plan-cn.xiaomimimo.com/v1}
+  auth-header-type: ${OPENAI_AUTH_HEADER_TYPE:api-key}  # api-key (MiMo风格) 或 bearer (OpenAI风格)
+  vision:
+    enabled: true
+    models:
+      mimo-v2-pro:
+        image-format: mimo
+        support-base64: true
+        strip-data-uri-prefix: true
+      mimo-v2.5:
+        image-format: mimo
+        support-base64: true
+        strip-data-uri-prefix: true
+      gpt-4-vision-preview:
+        image-format: openai
+        support-base64: true
+        strip-data-uri-prefix: false
+      gpt-4o:
+        image-format: openai
+        support-base64: true
+        strip-data-uri-prefix: false

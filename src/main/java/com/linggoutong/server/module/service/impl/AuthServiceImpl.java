@@ -11,6 +11,7 @@ import com.linggoutong.server.module.service.AuthService;
 import com.linggoutong.server.common.exception.BusinessException;
 import com.linggoutong.server.common.result.ResultCode;
 import com.linggoutong.server.common.security.JwtTokenProvider;
+import com.linggoutong.server.common.util.SmsService;
 import com.linggoutong.server.common.util.SnowflakeIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final StringRedisTemplate redisTemplate;
     private final SnowflakeIdGenerator snowflakeIdGenerator;
+    private final SmsService smsService;
 
     @Override
     public void sendSmsCode(String phone) {
@@ -47,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
                 TimeUnit.MINUTES
         );
 
-        log.info("发送验证码到手机 {}: {}", phone, code);
+        smsService.sendSmsCode(phone, code);
     }
 
     @Override

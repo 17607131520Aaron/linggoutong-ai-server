@@ -11,10 +11,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -23,11 +26,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    private static final List<String> WHITELIST = Arrays.asList(
+            "/api/app/auth/**",
+            "/api/web/auth/**",
+            "/api/common/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/actuator/**",
+            "/files/**"
+    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String requestUri = request.getRequestURI();
+        
+        boolean isWhitelisted = WHITELIST.stream()
+                .anyMatch(pattern -> pathMatcher.match(pattern, requestUri));
+        
+        if (isWhitelisted) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String token = extractToken(request);
 

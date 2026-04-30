@@ -27,6 +27,10 @@ public class LoginUser implements UserDetails {
     private Integer status;
     private Set<String> roles;
 
+    public Long getUserId() {
+        return id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

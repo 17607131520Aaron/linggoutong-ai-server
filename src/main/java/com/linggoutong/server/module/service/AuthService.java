@@ -3,6 +3,7 @@ package com.linggoutong.server.module.service;
 import com.linggoutong.server.app.dto.LoginRequest;
 import com.linggoutong.server.app.dto.LoginResponse;
 import com.linggoutong.server.app.dto.RegisterRequest;
+import com.linggoutong.server.app.dto.UserInfoResponse;
 
 public interface AuthService {
 
@@ -27,4 +28,12 @@ public interface AuthService {
      * @param request 注册请求
      */
     void register(RegisterRequest request);
+
+    /**
+     * 获取用户详情
+     *
+     * @param userId 用户ID
+     * @return 用户信息
+     */
+    UserInfoResponse getUserInfo(Long userId);
 }

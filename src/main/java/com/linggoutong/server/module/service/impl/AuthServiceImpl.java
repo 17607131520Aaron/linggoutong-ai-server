@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.linggoutong.server.app.dto.LoginRequest;
 import com.linggoutong.server.app.dto.LoginResponse;
 import com.linggoutong.server.app.dto.RegisterRequest;
+import com.linggoutong.server.app.dto.UserInfoResponse;
 import com.linggoutong.server.module.entity.User;
 import com.linggoutong.server.module.mapper.UserMapper;
 import com.linggoutong.server.module.service.AuthService;
@@ -110,6 +111,24 @@ public class AuthServiceImpl implements AuthService {
         redisTemplate.delete(SMS_CODE_PREFIX + request.getPhone());
 
         log.info("用户注册成功: {}", request.getPhone());
+    }
+
+    @Override
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userMapper.selectById(userId);
+        
+        if (user == null) {
+            throw new BusinessException(ResultCode.USER_NOT_FOUND);
+        }
+
+        return UserInfoResponse.builder()
+                .userId(user.getId())
+                .phone(user.getPhone())
+                .nickname(user.getNickname())
+                .avatar(user.getAvatar())
+                .email(user.getEmail())
+                .createTime(user.getCreateTime())
+                .build();
     }
 
     private String generateCode() {

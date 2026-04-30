@@ -1,4 +1,4 @@
-package com.linggoutong.server.module.auth.controller.web;
+package com.linggoutong.server.module.web;
 
 import com.linggoutong.server.common.result.R;
 import com.linggoutong.server.module.auth.dto.LoginRequest;

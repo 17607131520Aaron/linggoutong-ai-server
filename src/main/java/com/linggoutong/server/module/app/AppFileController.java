@@ -1,4 +1,4 @@
-package com.linggoutong.server.module.file.controller.app;
+package com.linggoutong.server.module.app;
 
 import com.linggoutong.server.common.result.R;
 import com.linggoutong.server.module.file.dto.FileDTO;

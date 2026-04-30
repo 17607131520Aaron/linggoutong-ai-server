@@ -1,4 +1,4 @@
-package com.linggoutong.server.module.user.controller.app;
+package com.linggoutong.server.module.web;
 
 import com.linggoutong.server.common.result.R;
 import com.linggoutong.server.common.security.SecurityUtils;
@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/app/user")
+@RequestMapping("/api/web/user")
 @RequiredArgsConstructor
-@Tag(name = "App端用户", description = "App端用户接口")
-public class AppUserController {
+@Tag(name = "Web端用户", description = "Web端用户接口")
+public class WebUserController {
 
     private final UserService userService;
 
@@ -24,6 +24,12 @@ public class AppUserController {
     public R<UserVO> getCurrentUser() {
         Long userId = SecurityUtils.getCurrentUserId();
         return R.ok(userService.getUserById(userId));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "获取指定用户信息", description = "根据用户ID获取用户信息")
+    public R<UserVO> getUserById(@PathVariable Long id) {
+        return R.ok(userService.getUserById(id));
     }
 
     @PutMapping("/me")

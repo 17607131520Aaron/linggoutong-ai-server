@@ -26,9 +26,9 @@ jwt:
     - /api/app/auth/login
     - /api/app/auth/register
     - /api/app/auth/refresh
-    - /api/pc/auth/login
-    - /api/pc/auth/register
-    - /api/pc/auth/refresh
+    - /api/web/auth/login
+    - /api/web/auth/register
+    - /api/web/auth/refresh
     - /api/common/**
     - /swagger-ui/**
     - /v3/api-docs/**
@@ -82,30 +82,12 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
   group-configs:
-    - group: app-auth
-      paths-to-match: /api/app/auth/**
-      packages-to-scan: com.linggoutong.server.module.auth.controller.app
-    - group: app-user
-      paths-to-match: /api/app/user/**
-      packages-to-scan: com.linggoutong.server.module.user.controller.app
-    - group: app-file
-      paths-to-match: /api/app/file/**
-      packages-to-scan: com.linggoutong.server.module.file.controller.app
-    - group: app-push
-      paths-to-match: /api/app/push/**
-      packages-to-scan: com.linggoutong.server.module.push.controller.app
-    - group: pc-auth
-      paths-to-match: /api/pc/auth/**
-      packages-to-scan: com.linggoutong.server.module.auth.controller.pc
-    - group: pc-user
-      paths-to-match: /api/pc/user/**
-      packages-to-scan: com.linggoutong.server.module.user.controller.pc
-    - group: pc-file
-      paths-to-match: /api/pc/file/**
-      packages-to-scan: com.linggoutong.server.module.file.controller.pc
-    - group: pc-push
-      paths-to-match: /api/pc/push/**
-      packages-to-scan: com.linggoutong.server.module.push.controller.pc
+    - group: app
+      paths-to-match: /api/app/**
+      packages-to-scan: com.linggoutong.server.module.app
+    - group: web
+      paths-to-match: /api/web/**
+      packages-to-scan: com.linggoutong.server.module.web
 
 # ==================== MyBatis-Plus ====================
 mybatis-plus:

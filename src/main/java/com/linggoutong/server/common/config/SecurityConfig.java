@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/app/auth/sms-code", "/app/auth/login", "/app/auth/register").permitAll()
                         .requestMatchers("/api/app/auth/**").permitAll()
                         .requestMatchers("/api/web/auth/**").permitAll()
                         .requestMatchers("/api/common/**").permitAll()

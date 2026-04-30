@@ -29,6 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private static final List<String> WHITELIST = Arrays.asList(
+            "/app/auth/sms-code",
+            "/app/auth/login",
+            "/app/auth/register",
             "/api/app/auth/**",
             "/api/web/auth/**",
             "/api/common/**",

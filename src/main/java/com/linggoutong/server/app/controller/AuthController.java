@@ -1,19 +1,18 @@
 package com.linggoutong.server.app.controller;
 
-import com.linggoutong.server.app.dto.LoginRequest;
-import com.linggoutong.server.app.dto.LoginResponse;
-import com.linggoutong.server.app.dto.RegisterRequest;
-import com.linggoutong.server.app.dto.SendSmsCodeRequest;
+import com.linggoutong.server.app.dto.*;
+import com.linggoutong.server.common.security.LoginUser;
 import com.linggoutong.server.module.service.AuthService;
 import com.linggoutong.server.common.result.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/app/auth")
+@RequestMapping("/app/auth")
 @RequiredArgsConstructor
 @Tag(name = "App认证接口", description = "App端登录注册相关接口")
 public class AuthController {
@@ -39,5 +38,12 @@ public class AuthController {
     public R<Void> register(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
         return R.ok("注册成功", null);
+    }
+
+    @GetMapping("/info")
+    @Operation(summary = "获取用户信息")
+    public R<UserInfoResponse> getUserInfo(@AuthenticationPrincipal LoginUser loginUser) {
+        UserInfoResponse response = authService.getUserInfo(loginUser.getUserId());
+        return R.ok(response);
     }
 }

@@ -52,12 +52,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        String cachedCode = redisTemplate.opsForValue().get(SMS_CODE_PREFIX + request.getPhone());
-        
-        if (cachedCode == null || !cachedCode.equals(request.getCode())) {
-            throw new BusinessException(ResultCode.LOGIN_FAILED, "验证码错误或已过期");
-        }
-
         User user = userMapper.selectOne(
                 new LambdaQueryWrapper<User>().eq(User::getPhone, request.getPhone())
         );
@@ -70,7 +64,19 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(ResultCode.ACCOUNT_DISABLED);
         }
 
-        redisTemplate.delete(SMS_CODE_PREFIX + request.getPhone());
+        // 密码登录
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                throw new BusinessException(ResultCode.LOGIN_FAILED, "密码错误");
+            }
+        } else {
+            // 验证码登录
+            String cachedCode = redisTemplate.opsForValue().get(SMS_CODE_PREFIX + request.getPhone());
+            if (cachedCode == null || !cachedCode.equals(request.getCode())) {
+                throw new BusinessException(ResultCode.LOGIN_FAILED, "验证码错误或已过期");
+            }
+            redisTemplate.delete(SMS_CODE_PREFIX + request.getPhone());
+        }
 
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), user.getPhone());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());

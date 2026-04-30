@@ -2,6 +2,8 @@ package com.linggoutong.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @SpringBootTest(properties = {
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration," +
@@ -18,6 +20,9 @@ import org.springframework.boot.test.context.SpringBootTest;
         "spring.data.mongodb.uri=mongodb://localhost:27017/test"
 })
 class LinggoutongApplicationTests {
+
+    @MockBean
+    private StringRedisTemplate stringRedisTemplate;
 
     @Test
     void contextLoads() {

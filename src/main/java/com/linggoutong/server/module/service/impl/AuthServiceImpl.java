@@ -99,6 +99,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = new User();
+        user.setUsername(request.getPhone());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setNickname("用户" + request.getPhone().substring(7));

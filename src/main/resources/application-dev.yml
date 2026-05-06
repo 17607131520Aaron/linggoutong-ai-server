@@ -21,7 +21,7 @@ spring:
   # MongoDB
   data:
     mongodb:
-      uri: mongodb://localhost:27017/linggoutong
+      uri: mongodb://root:123456@localhost:27017/linggoutong?authSource=admin
     # Redis
     redis:
       host: ${REDIS_HOST:localhost}
